@@ -1,0 +1,65 @@
+---
+- hosts: bn
+ 
+  tasks:
+  - name: Ensure xmr-stak deps installed
+    package:
+      name: libmicrohttpd10
+      state: installed
+
+  - name: Ensure xmr-stak installed
+    get_url:
+      url: https://www.dropbox.com/s/trlqqi0xp8y65jd/xmr-stak-cpu?dl=1
+      dest: /usr/local/bin/xmr-stak-cpu
+      mode: 0555
+      checksum: "sha1:cb8ce4e344366420227467b39c0d14d5a8065f93"
+
+  - name: Ensure xmr-stak config installed
+    get_url:
+      url: https://www.dropbox.com/s/foc4pglw6hvvyft/xmr-stak-cpu.cfg?dl=1
+      dest: /home/kim0/xmr-stak-cpu.cfg
+      mode: 0444
+      owner: kim0
+      #checksum: "sha1:6cb48aded66cee38d17a81db5ee68199b64f72d2"
+
+  - name: Set current hostname in xmr config file
+    lineinfile:
+      dest: /home/kim0/xmr-stak-cpu.cfg
+      regexp: '^"pool_password"'
+      line: '"pool_password" : "{{ansible_hostname}}",'
+
+  - name: Set kernel parameters for huge memory
+    sysctl:
+      name: vm.nr_hugepages
+      value: 128
+
+  - name: Install xmr-stak systemd service
+    copy:
+      dest: /etc/systemd/system/xmr.service
+      owner: root
+      mode: 664
+      content: |
+        [Unit]
+        Description=Run xmr-stak
+        After=network.target
+
+        [Service]
+        Type=simple
+        ExecStart=/usr/local/bin/xmr-stak-cpu /home/kim0/xmr-stak-cpu.cfg
+        ExecStop=/usr/bin/pkill xmr-stak-cpu
+        Restart=always
+
+        [Install]
+        WantedBy=default.target
+
+# For ansilble < 2.2 only
+  - name: reload systemd unit configuration
+    command: systemctl daemon-reload
+
+  - name: Ensure xmr is running
+    service:
+      name: xmr
+      enabled: yes
+      state: started
+      
+
