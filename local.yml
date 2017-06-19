@@ -1,5 +1,5 @@
 ---
-- hosts: bn
+- hosts: localhost
  
   tasks:
   - name: Ensure xmr-stak deps installed
