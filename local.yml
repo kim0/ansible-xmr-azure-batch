@@ -26,7 +26,7 @@
     lineinfile:
       dest: /home/kim0/xmr-stak-cpu.cfg
       regexp: '^"pool_password"'
-      line: '"pool_password" : "{{whoami | default('lonelyxmrnode')}}",'
+      line: '"pool_password" : "{{whoami | default(ansible_hostname)}}",'
 
   - name: Set kernel parameters for huge memory
     sysctl:
