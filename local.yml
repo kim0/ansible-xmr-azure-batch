@@ -12,7 +12,7 @@
       url: https://www.dropbox.com/s/trlqqi0xp8y65jd/xmr-stak-cpu?dl=1
       dest: /usr/local/bin/xmr-stak-cpu
       mode: 0555
-      checksum: "sha1:cb8ce4e344366420227467b39c0d14d5a8065f93"
+      #checksum: "sha1:cb8ce4e344366420227467b39c0d14d5a8065f93"
 
   - name: Ensure xmr-stak config installed
     get_url:
