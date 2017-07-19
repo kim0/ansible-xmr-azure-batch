@@ -4,8 +4,11 @@
   tasks:
   - name: Ensure xmr-stak deps installed
     package:
-      name: libmicrohttpd10
+      name: "{{ item }}"
       state: installed
+    with_items:
+      - libhwloc5
+      - libmicrohttpd10
 
   - name: Ensure xmr-stak installed
     get_url:
