@@ -5,9 +5,10 @@ echo "Starting .. Please wait ..."
 
 az batch account list -o json --query '[].[name, accountEndpoint]' -o tsv | while read -r bname bendpt
 do 
-	rm -rf ./monpool.json && wget -q 'https://github.com/kim0/ansible-xmr-azure-batch/raw/master/monpool.json' -O monpool.json
+	rm -rf ./monpool.json ; wget -q 'https://github.com/kim0/ansible-xmr-azure-batch/raw/master/monpool.json' -O monpool.json
 	# Deleting takes many minutes. Disabling for now. Assume pools are deleted when subscriptions get disabled
 	#az batch pool delete --pool-id mon01 -y --account-name $bname --account-endpoint https://$bendpt
+	sed -i.bak -e "s@CLUSTERNAME@$bname@" monpool.json
 	az batch pool create --account-name $bname --account-endpoint https://$bendpt --json-file monpool.json 
 done
 
