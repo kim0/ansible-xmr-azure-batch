@@ -24,7 +24,7 @@
     "waitForSuccess": false
   },
   "targetDedicatedNodes": 0,
-  "targetLowPriorityNodes": 12,
+  "targetLowPriorityNodes": LPCOREQUOTA,
   "taskSchedulingPolicy": {
     "nodeFillType": "pack"
   },
