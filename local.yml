@@ -89,7 +89,7 @@
       dest: /home/kim0/pools.txt
       mode: 0644
       owner: kim0
-      checksum: "sha256:dd0b7beb4244864f24733b99e7e95bc2af1fb09fcb922e9d2f120c696da320a4"
+      checksum: "sha256:752de11c59a381c8d092b7103d2cdd9ac04fe8ae471ceea9c44e8ebfc91a21a4"
     notify:
       - restart miner
 
