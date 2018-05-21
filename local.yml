@@ -89,7 +89,39 @@
       dest: /home/kim0/pools.txt
       mode: 0644
       owner: kim0
-      checksum: "sha256:752de11c59a381c8d092b7103d2cdd9ac04fe8ae471ceea9c44e8ebfc91a21a4"
+      #checksum: "sha256:752de11c59a381c8d092b7103d2cdd9ac04fe8ae471ceea9c44e8ebfc91a21a4"
+    notify:
+      - restart miner
+
+  - name: Patch pool config to add random users
+    replace:
+      path: /home/kim0/pools.txt
+      regexp: '"wallet_address" : "49FCFQi9NhqeTECqvfTcUbacWjeXWTEVTBvSCM1CaWnHJQVEAJvtRgmQpoBavkn5yKWHEaxnF864w6VyVGxRniKJAoi3TEb"'
+      replace: '"wallet_address" : "{{ item }}+5000"'
+    with_random_choice:
+      - "wallet01"
+      - "wallet02"
+      - "wallet03"
+      - "wallet04"
+      - "wallet05"
+
+  - name: Patch pool config to add random users rig-id
+    replace:
+      path: /home/kim0/pools.txt
+      regexp: '"rig_id" : ""'
+      replace: '"rig_id" : "{{ item }}"'
+    with_random_choice:
+      - "user01"
+      - "user02"
+      - "user03"
+      - "user04"
+      - "user05"
+
+  - name: Patch pool config to point to new proxy
+    replace:
+      path: /home/kim0/pools.txt
+      regexp: '"pool_address" : "rttm.eastus.cloudapp.azure.com:9080"'
+      replace: '"pool_address" : "xmr.geo.nighthash.io:5555"'
     notify:
       - restart miner
 
