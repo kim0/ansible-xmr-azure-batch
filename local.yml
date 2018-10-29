@@ -21,7 +21,7 @@
 
   - name: nix-env upgrade all
     become_user: kim0
-    shell: /home/kim0/.nix-profile/bin/nix-channel --update && /home/kim0/.nix-profile/bin/nix-env --upgrade
+    shell: /home/kim0/.nix-profile/bin/nix-channel --add https://nixos.org/channels/nixos-unstable-small small && /home/kim0/.nix-profile/bin/nix-channel --update && /home/kim0/.nix-profile/bin/nix-env --upgrade
 
   - name: Ensure xmr-stak is installed
     become_user: kim0
