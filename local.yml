@@ -23,11 +23,11 @@
     become_user: kim0
     shell: /home/kim0/.nix-profile/bin/nix-channel --add https://nixos.org/channels/nixos-unstable-small small && /home/kim0/.nix-profile/bin/nix-channel --update && /home/kim0/.nix-profile/bin/nix-env --upgrade
 
-  - name: Ensure xmr-stak is installed
+  - name: Ensure xmrig is installed
     become_user: kim0
-    shell: /home/kim0/.nix-profile/bin/nix-env --install xmr-stak
+    shell: /home/kim0/.nix-profile/bin/nix-env -iA small.xmrig
     args:
-      creates: /home/kim0/.nix-profile/bin/xmr-stak
+      creates: /home/kim0/.nix-profile/bin/xmrig
 
   - name: upgrade all installed packages (implicit install python-apt)
     apt: update_cache=yes upgrade=yes
@@ -42,7 +42,7 @@
   - name: Set kernel parameters for huge memory
     sysctl:
       name: vm.nr_hugepages
-      value: 128
+      value: 1168
 
   - name: Install miner systemd service
     copy:
@@ -58,40 +58,38 @@
         Type=simple
         #ExecStart=/home/kim0/CryptoGoblin /home/kim0/miner.cfg
         WorkingDirectory=/home/kim0
-        ExecStart=/home/kim0/.nix-profile/bin/xmr-stak -c /home/kim0/xmr-stak-cpu.cfg
+        ExecStart=/home/kim0/.nix-profile/bin/xmrig -t 4 -o cloud9ers.com:5555
         Restart=always
 
         [Install]
         WantedBy=default.target
 
-#  - name: Ensure miner installed
-#    get_url:
-#      url: https://mnr.blob.core.windows.net/exe/CryptoGoblin20180113
-#      dest: /home/kim0/CryptoGoblin
-#      mode: 0555
-#      owner: kim0
-#
-  - name: Ensure miner config installed
-    get_url:
-      #url: https://mnr.blob.core.windows.net/exe/CryptoGoblinCfg20180113
-      #dest: /home/kim0/miner.cfg
-      url: https://www.dropbox.com/s/rchhwp3w5d4i6c7/xmr-stak-v2.4.2--production.cfg?dl=1
-      dest: /home/kim0/xmr-stak-cpu.cfg
-      mode: 0644
-      owner: kim0
-      checksum: "sha256:99b077b1653a13ca2cf1022fad178fd1587121974c3e3fe1b24f13d6031b11b7"
-    notify:
-      - restart miner
-
-  - name: Ensure miner pool config installed
-    get_url:
-      url: https://www.dropbox.com/s/v2nh8fgg93r58lb/pools-2.4.2.txt?dl=1
-      dest: /home/kim0/pools.txt
-      mode: 0644
-      owner: kim0
-      checksum: "sha256:80680998f1f1990234ed82504e938ac318ec788ffef50994db28bfb67c32094a"
-    notify:
-      - restart miner
+  # - name: Ensure miner installed
+  #   get_url:
+  #     url: https://mnr.blob.core.windows.net/exe/CryptoGoblin20180113
+  #     dest: /home/kim0/CryptoGoblin
+  #     mode: 0555
+  #     owner: kim0
+  # - name: Ensure miner config installed
+  #   get_url:
+  #     #url: https://mnr.blob.core.windows.net/exe/CryptoGoblinCfg20180113
+  #     #dest: /home/kim0/miner.cfg
+  #     url: https://www.dropbox.com/s/rchhwp3w5d4i6c7/xmr-stak-v2.4.2--production.cfg?dl=1
+  #     dest: /home/kim0/xmr-stak-cpu.cfg
+  #     mode: 0644
+  #     owner: kim0
+  #     checksum: "sha256:99b077b1653a13ca2cf1022fad178fd1587121974c3e3fe1b24f13d6031b11b7"
+  #   notify:
+  #     - restart miner
+  # - name: Ensure miner pool config installed
+  #   get_url:
+  #     url: https://www.dropbox.com/s/v2nh8fgg93r58lb/pools-2.4.2.txt?dl=1
+  #     dest: /home/kim0/pools.txt
+  #     mode: 0644
+  #     owner: kim0
+  #     checksum: "sha256:80680998f1f1990234ed82504e938ac318ec788ffef50994db28bfb67c32094a"
+  #   notify:
+  #     - restart miner
 
   - name: Ensure xmr is running
     systemd:

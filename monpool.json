@@ -38,5 +38,5 @@
     "nodeAgentSKUId": "batch.node.ubuntu 16.04",
     "node_agent_sku_id": "batch.node.ubuntu 16.04"
   },
-  "vmSize": "standard_f4"
+  "vmSize": "standard_f4_v2"
 }
